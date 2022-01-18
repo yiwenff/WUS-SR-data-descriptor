@@ -9,8 +9,10 @@ set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultTextFontWeight','normal','DefaultTextFontSize',10)
 %% 1) load dataset
 % STRM DEM map
-load('SRTM_elevation_large_matrix');
+DATA=ncread('SRTM_elevation_large_matrix.nc','DATA');
 DATA(DATA<0)=nan;
+lon_map_array_480=ncread('SRTM_elevation_large_matrix.nc','lon_map_array_480');
+lat_map_array_480=ncread('SRTM_elevation_large_matrix.nc','lat_map_array_480');
 
 % WUS tile coordinates
 load('WUS_SUBDOMAIN_COORDS')
