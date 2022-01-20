@@ -1,4 +1,4 @@
-% function f1_Plot_WUS_map
+% Scripts of Figure 1. Plot WUS domain map
 % Written by Yiwen Fang, 2021 
 set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultAxesXminortick','on','DefaultAxesYminortick','on',...
@@ -7,7 +7,7 @@ set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultAxesFontName','Arial','DefaultAxesFontSize',14,...
     'DefaultAxesFontWeight','bold',...
     'DefaultTextFontWeight','normal','DefaultTextFontSize',10)
-%% 1) load dataset
+%% 1) load dataset (can be downloaded on Github)
 % STRM DEM map
 DATA=ncread('SRTM_elevation_large_matrix.nc','DATA');
 DATA(DATA<0)=nan;
@@ -26,7 +26,7 @@ load('WUS_HUC2_boundaries','HUC2_string','HUC2')
 % SNOTEL coordinates
 load('SNOTEL_SWE_WY1985_2021_high_res','SNOTEL','site_select')
 %% 2) Generate plot
-figure,set(gcf,'position',[42   81   1355 879])
+figure,set(gcf,'position',[42   81   1015 879])
 hold on
 whitebg([240/255, 248/255, 255/255])
 % WUS tiles

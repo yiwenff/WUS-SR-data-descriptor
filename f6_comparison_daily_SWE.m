@@ -1,3 +1,5 @@
+% Scripts of Figure 6. Compare reanalysis daily SWE and in situ daily SWE 
+% Written by Yiwen Fang, 2021 
 set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultAxesXminortick','on','DefaultAxesYminortick','on',...
     'DefaultAxesLineWidth',3,...
@@ -17,21 +19,23 @@ Ocn_r=getPyPlot_cMap('ocean_r');
 jet_py=getPyPlot_cMap('jet');
 trn=getPyPlot_cMap('terrain');
 
-% HUC2 lat/lon
+%% load data
 load('WUS_HUC2_boundaries','HUC2_string','HUC2')
 load('SNOTEL_SWE_WY1985_2021_high_res')
 load('Posterior_Reanalysis_SWE_WY1985_2021_daily_high_res')
-%% 1) Spatial distribution of bias, rmse at each site 
-% for all SWE > 0.01
+%% 1) Compute Spatial distribution of correlation, bias, rmse at each site 
 nsite=size(Peak_DAY,1);
 corre_site=nan(nsite,1);
 MD_site=nan(nsite,1);
 RMSD_site=nan(nsite,1);
+% Compute statistics
 for j =1:nsite
 snotel=squeeze(SWE(j,:,:));
 reanalysis=squeeze(SWE_Reanalysis(j,:,:));
 snotel=snotel';
 reanalysis=reanalysis';
+
+% find daily SWE > 1 mm
 I=find(isnan(snotel)==0 & isnan(reanalysis)==0 & snotel >0.001 & reanalysis >0.001);
 
 if isempty(I)==0
@@ -44,10 +48,14 @@ if isempty(I)==0
 
 end
 end
-
+%% 2) Plot Spatial distribution of correlation, bias, rmse 
 figure,whitebg([245/255,245/255,245/255])
 ha=tight_subplot(2,2,0.08,0.08,0.08);
-set(gcf,'Position',[100 81 1350 320])
+set(gcf,'Position',[100 81 1137 904])
+
+% Plot statics for site located higher than 1500 m
+Isite=find(isnan(MD_site)==0 & SNOTEL.Elev*0.3048>1500);
+Isite=intersect(Isite,site_select);
 
 % (a) Correlation Coefficient R
 axes(ha(1))
@@ -56,8 +64,6 @@ hold on
 for j=1: length(HUC2_string)
     plot(HUC2.(['s' HUC2_string(j,:)]).X,HUC2.(['s' HUC2_string(j,:)]).Y,'color',[28,40,51]/255,'Linewidth',1.5)
 end
-Isite=find(isnan(MD_site)==0 & SNOTEL.Elev*0.3048>1500);
-Isite=intersect(Isite,site_select);
 scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),corre_site(Isite)*100,corre_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
 box on
 c=colorbar;
@@ -134,6 +140,7 @@ colormap(ha(4),trn)
 caxis([0,4000])
 text(-104.5,47.5,'(d)','FontSize',22,'FontWeight','bold')
 set(gca,'FontSize',22)
+%% A few setting before printing
 % set(gcf, 'InvertHardCopy', 'off');
 % set(gcf, 'Color', [1 1 1]); 
 % set(gcf, 'Renderer', 'painters')
