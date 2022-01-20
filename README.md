@@ -1,7 +1,7 @@
 # WUS-SR-data-descriptor
 This repository contains Matlab scripts used to generate the figures in the data descriptor paper.
 
-Datasets used in the scripts are uploaded in the data folder. To run f4_plot_sample_SWE, raw netcdf files need to be downloaded from website and stored in directory:
+Datasets used in the scripts are uploaded in the data folder. To run f4_Plot_Reanalysis_SWE, raw netcdf files need to be downloaded from website and stored in directory:
 _output_dir_/N39_0W120_0_agg_16/WY2019/SWE_SCA_POST/N39_0W120_0_agg_16_SWE_SCA_POST_WY2018_19.nc
 
 where _output_dir_ is the directory you store these netcdf files.
