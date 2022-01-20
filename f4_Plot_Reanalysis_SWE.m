@@ -1,5 +1,5 @@
 %% Timeseries of SWE volumes (WUS-wide + subbasin)
-% Scripts of Figure 4. Plot Sample SWE
+% Scripts of Figure 4. Sample plot Reanalysis SWE
 % Written by Yiwen Fang, 2021 
 set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultAxesXminortick','on','DefaultAxesYminortick','on',...
