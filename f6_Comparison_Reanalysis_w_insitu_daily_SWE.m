@@ -49,9 +49,9 @@ if isempty(I)==0
 end
 end
 %% 2) Plot Spatial distribution of correlation, bias, rmse 
-figure,whitebg([245/255,245/255,245/255])
-ha=tight_subplot(2,2,0.08,0.08,0.08);
-set(gcf,'Position',[100 81 1137 904])
+%figure,whitebg([245/255,245/255,245/255])
+ha=tight_subplot(2,2,0.05,0.05,0.05);
+set(gcf,'Position',[100 81 1055 725])
 
 % Plot statics for site located higher than 1500 m
 Isite=find(isnan(MD_site)==0 & SNOTEL.Elev*0.3048>1500);
@@ -64,12 +64,12 @@ hold on
 for j=1: length(HUC2_string)
     plot(HUC2.(['s' HUC2_string(j,:)]).X,HUC2.(['s' HUC2_string(j,:)]).Y,'color',[28,40,51]/255,'Linewidth',1.5)
 end
-scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),corre_site(Isite)*100,corre_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
+scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),40,corre_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
 box on
 c=colorbar;
 c.Label.String='(-)';
 axis equal
-xlabel('Longitude')
+%xlabel('Longitude')
 ylabel('Latitude')
 xlim([-125,-102])
 ylim([31,49])
@@ -84,11 +84,11 @@ hold on
 for j=1: length(HUC2_string)
     plot(HUC2.(['s' HUC2_string(j,:)]).X,HUC2.(['s' HUC2_string(j,:)]).Y,'color',[28,40,51]/255,'Linewidth',1.5)
 end
-scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),abs(MD_site_sz(Isite))*100,MD_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
+scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),40,MD_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
 c=colorbar;
 c.Label.String='(m)';
 axis equal
-xlabel('Longitude')
+%xlabel('Longitude')
 box on
 xlim([-125,-102])
 ylim([31,49])
@@ -105,12 +105,12 @@ for j=1: length(HUC2_string)
     plot(HUC2.(['s' HUC2_string(j,:)]).X,HUC2.(['s' HUC2_string(j,:)]).Y,'color',[28,40,51]/255,'Linewidth',1.5)
 end
 box on
-scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),RMSD_site_sz(Isite)*100,RMSD_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
+scatter(SNOTEL.lon(Isite),SNOTEL.lat(Isite),40,RMSD_site(Isite),'filled','MarkerEdgeColor',[128/255 128/255 128/255])
 c=colorbar;
 c.Label.String='(m)';
 axis equal
 xlabel('Longitude')
-%ylabel('Latitude')
+ylabel('Latitude')
 xlim([-125,-102])
 ylim([31,49])
 %colormap(Bl)
