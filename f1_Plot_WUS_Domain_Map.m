@@ -109,5 +109,7 @@ legend(ah1,'boxoff')
 %% A few setting before printing
 set(gcf, 'InvertHardCopy', 'off');
 set(gcf, 'Color', [1 1 1]); 
-set(gcf, 'Renderer', 'painters')
-%print('-painters','f1_domain_map','-dpng')
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
+%print('-painters','f1_domain_map2.pdf','-dpdf','-r0')

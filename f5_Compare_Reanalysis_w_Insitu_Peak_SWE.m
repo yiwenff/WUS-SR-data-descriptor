@@ -9,10 +9,12 @@ set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultTextFontWeight','normal','DefaultTextFontSize',10)
 
 %% Load data (can be downloaded on Github)
-load('Reanalysis_SWE_WY1985_2021_high_res')
+load('SNOTEL_SWE_peak_reanalysis')
 load('SNOTEL_SWE_WY1985_2021_high_res')
-load('WUS_subdomain_shp')
+load('CDEC_SWE_WY1985_2021');
+load('CDEC_SWE_peak_reanalysis')
 
+load('WUS_subdomain_shp')
 %% Scatter plot for CA, PN, GB, UCRB, MO
 basinname_str=char({'CA';'PN';'GB';'Others';'UCRB';'Others';'Others';'Others';'MO'});
 basinname=char(fieldnames(shp));
@@ -29,18 +31,28 @@ for j=1:5
     ibasin=basin(j);
     axes(ha(j))
     b_name=strtrim(basinname(ibasin,:));
+    disp(b_name)
     % Compute mean of peak SWE
     meanSWE=nanmean(Peak_SWE,2);
     
     % Select elevation > 1500m
-    iana=find(SNOTEL.Elev*0.3048>1500 & basinidx.(b_name)==1);
+    iana=find(basinidx.(b_name)==1);
     iana=intersect(iana,site_select);
     
-    % Extract peak SWE
-    Insitu=Peak_SWE(iana,:);
-    Reanalysis=Peak_SWE_re_post(iana,:);
-    Reanalysis_prior=Peak_SWE_re_prior(iana,:);
-    
+    if j==1
+        % Extract peak SWE for data from SNOTEL and CDEC in CA
+        Insitu=[Peak_SWE_CDEC; Peak_SWE(iana,:)];
+        Reanalysis=[Peak_SWE_re_post_CDEC; Peak_SWE_re_post(iana,:)];
+        Reanalysis_prior=[Peak_SWE_re_prior_CDEC; Peak_SWE_re_prior(iana,:)];
+        
+    else
+        % Extract peak SWE
+        Insitu=Peak_SWE(iana,:);
+        Reanalysis=Peak_SWE_re_post(iana,:);
+        Reanalysis_prior=Peak_SWE_re_prior(iana,:);
+    end
+    % Count number of sites available
+    disp(['# of sites: ' num2str(sum(nansum(Insitu,2)~=0))])
     % Exclude shallow Peak SWE < 1cm
     I=find(Insitu >0.01 & Reanalysis> 0.01  & isnan(Insitu)~=1 & isnan(Reanalysis)~=1 & isnan(Reanalysis_prior)~=1);
     
@@ -49,6 +61,9 @@ for j=1:5
     % Robert Henson (2021). Flow Cytometry Data Reader and Visualization
     %(https://www.mathworks.com/matlabcentral/fileexchange/8430-flow-cytometry-data-reader-and-visualization), 
     % MATLAB Central File Exchange. Retrieved July, 30, 2021.
+    
+    % Count number of site-years available
+    disp(['# of site-years: ' num2str(length(I))])
     colormap(jet)
     hold on
     plot([0,2.5],[0,2.5],'k','linewidth',1)
@@ -57,6 +72,9 @@ for j=1:5
     R = corr(Insitu(I),Reanalysis(I));
     MD = mean(Reanalysis(I) - Insitu(I));
     RMSD = sqrt(mean((Insitu(I) - Reanalysis(I)).^2));
+    R2 = corr(Insitu(I),Reanalysis_prior(I));
+    MD2 = mean(Reanalysis_prior(I) - Insitu(I));
+    RMSD2 = sqrt(mean((Insitu(I) - Reanalysis_prior(I)).^2));
     
     % print statistics on figure
     text(0.2,2.3,['{\it R} = ' num2str(R, '%.2f')],'FontSize',24)
@@ -77,21 +95,24 @@ for j=1:5
 end
 
 % Scatter plot for the rest of data (Others)
+disp('Others')
 for ibasin = [4,6,8]
     b_name=strtrim(basinname(ibasin,:));
     othermask(ibasin,:,:)=basinidx.(b_name);
 end
 Isite=max(othermask)';
-iana=find(SNOTEL.Elev*0.3048>1500 & Isite==1);
+iana=find(Isite==1);
 iana=intersect(iana,site_select);
 
 % Extract peak SWE
 Insitu=Peak_SWE(iana,:);
 Reanalysis=Peak_SWE_re_post(iana,:);
 Reanalysis_prior=Peak_SWE_re_prior(iana,:);
+disp(['# of sites: ' num2str(sum(nansum(Insitu,2)~=0))])
 
 % Exclude shallow Peak SWE < 1cm
 I=find(Insitu >0.01 & Reanalysis> 0.01 & isnan(Insitu)~=1 & isnan(Reanalysis)~=1 & isnan(Reanalysis_prior)~=1);
+disp(['# of site-years: ' num2str(length(I))])
 
 axes(ha(6))
 % Density scatter plot
@@ -104,6 +125,9 @@ plot([0,2.5],[0,2.5],'k','linewidth',1)
 R = corr(Insitu(I),Reanalysis(I));
 MD = mean(Insitu(I) - Reanalysis(I));
 RMSD = sqrt(mean((Insitu(I) - Reanalysis(I)).^2));
+R2 = corr(Insitu(I),Reanalysis_prior(I));
+MD2 = mean(Reanalysis_prior(I) - Insitu(I));
+RMSD2 = sqrt(mean((Insitu(I) - Reanalysis_prior(I)).^2));
 
 % Print statistics on figure
 text(0.2, 2.3,['{\it R} = ' num2str(R, '%.2f')],'FontSize',24)
@@ -121,6 +145,9 @@ box off
 title('Other basins','FontSize',28)
 
 %% A few setting before printing
-set(gcf, 'InvertHardCopy', 'off');
 set(gcf, 'Color', [1 1 1]);
 set(gcf, 'Renderer', 'painters')
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
+% print('-painters','f5_density_plot_SWE_approach1','-dpdf','-r0')

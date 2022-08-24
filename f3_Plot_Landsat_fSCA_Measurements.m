@@ -105,7 +105,7 @@ end
     elseif iyear==2
         title(['WY ' WY_text ' (Landsat 5 and 7)'])
     elseif iyear==3
-        title(['WY ' WY_text ' (Landsat 5 mostly)'])
+        title(['WY ' WY_text ' (Landsat 7 mostly)'])
     elseif iyear==4
         title(['WY ' WY_text ' (Landsat 7 and 8)'])
     end
@@ -136,4 +136,7 @@ set(ax5,'color',[1 1 1])
 set(gcf, 'InvertHardCopy', 'off');
 set(gcf, 'Color', [1 1 1]);
 set(gcf, 'Renderer', 'painters')
-%print('-painters','f3_number_of_landsat_image','-dpng')
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
+%print('-painters','f3_number_of_landsat_image','-dpdf','-r0')

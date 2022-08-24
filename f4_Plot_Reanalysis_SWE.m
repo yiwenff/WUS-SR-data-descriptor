@@ -127,6 +127,7 @@ for i_tile= 1:size(COORDS,1)
     coords=COORDS(i_tile,:);
     tile_string = ['N' num2str(coords(1,1)) '_0' hemi num2str(coords(1,2)) '_0'];
     disp(['Extracting variables for tile ' tile_string ' in WY ' append_year])
+    % Need to change the filepath if needed
     filename = [output_dir tile_string '_agg_16/WY' num2str(WY) '/SWE_SCA_POST/' tile_string '_agg_16_SWE_SCA_POST_WY' append_year '.nc'];
     
     % Read lat/lon
@@ -222,5 +223,10 @@ plot([-120.4546 -118.4635,-118.4635,-120.4546,-120.4546],...
     [36.7378,36.7378,39.1081,39.1081,36.7378],'linewidth',2,'color',[77 0 0]/255)
 
 %% A few setting before printing
-%set(gcf, 'Renderer', 'painters')
-%print('-painters','f4_Sample_figures_update_lres','-dpng')
+set(gcf, 'InvertHardCopy', 'off');
+set(gcf, 'Color', [1 1 1]);
+set(gcf, 'Renderer', 'painters')
+set(gcf,'Units','Inches');
+pos = get(gcf,'Position');
+set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
+%print('-painters','f4_Sample_figures_update_lres','-dpdf','-r0')
