@@ -172,9 +172,10 @@ for iASO=1:3
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
 end
 %% A few setting before printing
+set(gcf, 'InvertHardCopy', 'off');
 set(gcf, 'Color', [1 1 1]);
 set(gcf, 'Renderer', 'painters')
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
-%print('-painters','f10_compare_ASO_SWE_maps','-dpdf','-r0')
+%print('-painters','f11_compare_ASO_snowdepth_maps','-dpdf','-r0')
