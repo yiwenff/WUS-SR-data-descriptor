@@ -77,7 +77,7 @@ for j=1:5
     text(0.2, 2.05,['{\it MD} = ' num2str(MD, '%.2f') ' m'],'FontSize',24)
     text(0.2, 1.8,['{\it RMSD} = ' num2str(RMSD, '%.2f') ' m'],'FontSize',24)
     grid off
-    xlabel('SNOTEL SWE (m)')
+    xlabel('In situ SWE (m)')
     ylabel('Reanalysis SWE (m)')
     set(gca,'FontSize',20)
     title(basinname_str(ibasin,:),'FontSize',28)
@@ -129,7 +129,7 @@ grid off
 axis equal
 xlim([0,2.5])
 ylim([0,2.5])
-xlabel('SNOTEL SWE (m)')
+xlabel('In situ SWE (m)')
 ylabel('Reanalysis SWE (m)')
 set(gca,'FontSize',20)
 whitebg(([245/255,245/255,245/255]))

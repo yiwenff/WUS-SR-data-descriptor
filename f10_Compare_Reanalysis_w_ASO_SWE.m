@@ -3,9 +3,9 @@
 set(0,'DefaultAxesXGrid','on','DefaultAxesYGrid','on',...
     'DefaultAxesXminortick','on','DefaultAxesYminortick','on',...
     'DefaultLineLineWidth',1.5,'DefaultLineMarkerSize',6,...
-    'DefaultAxesFontName','Arial','DefaultAxesFontSize',16,...
+    'DefaultAxesFontName','Arial','DefaultAxesFontSize',14,...
     'DefaultAxesFontWeight','bold','DefaultAxesLinewidth',1.5,...
-    'DefaultTextFontWeight','normal','DefaultTextFontSize',16)
+    'DefaultTextFontWeight','normal','DefaultTextFontSize',14)
 %% Define colorbars
 clear;clc;
 c=[255  255  255;245  245     245;
@@ -35,9 +35,9 @@ ylims=[37.7,38.2; 47.5,48.0; 38.967,39.184];
 ticks_x=[-119.7 -119.5 -119.3;-123.6 -123.4 -123.2;-107 -106.9 -106.8];
 ticks_y=[37.8 38 38.2; 47.6 47.8 48; 39 39.1 39.2];
 
-figure;clf;set(gcf,'Position', [10 100 1500 1200])
+figure;clf;set(gcf,'Position', [-10 100 800 1200])
 whitebg(([245/255,245/255,245/255]))
-ha=tight_subplot(3,4,0.05,0.05,0.05);
+ha=tight_subplot(5,3,[0.04,0.06],[0.05 0.03],[0.08 0.04]);
 % Pekka Kumpulainen (2020). tight_subplot(Nh, Nw, gap, marg_h, marg_w) 
 % (https://www.mathworks.com/matlabcentral/fileexchange/27991-tight_subplot-nh-nw-gap-marg_h-marg_w), 
 % MATLAB Central File Exchange. Retrieved November 11, 2020.
@@ -60,7 +60,7 @@ for iASO=1:3
         map_data1=map_data1.*Mask_seasonal;
     end
     map_data1=map_data1(Ilat,Ilon);
-    iplot=iplot+1;
+    iplot=iASO;
     axes(ha(iplot))
     imAlpha=ones(size(map_data1));
     imAlpha(isnan(map_data1))=0;
@@ -68,9 +68,9 @@ for iASO=1:3
     set(gca,'YDir','normal')
     h=colorbar;
     caxis([0 round(10*prctile(map_data1(:),99))/10])
-    title(['ASO SWE' ])
     if iASO==1
-        title([{'ASO SWE'} {'USCATB'}])
+        title(['USCATB'])
+        yl1=ylabel('ASO SWE');
     elseif iASO==2
         title(['USWAOL'])
     else
@@ -78,14 +78,17 @@ for iASO=1:3
     end
     colormap(gca,map)
     axis equal
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     xticks(ticks_x(iASO,:))
     yticks(ticks_y(iASO,:))
+    if iASO==3
+        ylabel(h,'SWE (m)','FontSize',14)
+    end  
     
     % 2) Plot Reanalysis SWE
-    iplot=iplot+1;
+    iplot=iASO+3;
     axes(ha(iplot))    
     map_data3(nan_mask)=NaN;
     map_data3=map_data3(Ilat,Ilon);
@@ -97,17 +100,20 @@ for iASO=1:3
     h=colorbar;
     caxis([0 round(10*prctile(map_data1(:),99))/10])
     if iASO==1
-        title([{'Posterior SWE'} {''}])
+        yl=ylabel(['Posterior SWE']);
+        yl.Position(1)=-119.9236;
     end
     axis equal
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
-    ylabel(h,'SWE (m)','FontSize',20)
+    if iASO==3
+        ylabel(h,'SWE (m)','FontSize',14)
+    end   
 
     % 3) Plot Prior SWE - ASO SWE map
-    iplot=iplot+1;
+    iplot=iASO+6;
     axes(ha(iplot))
     map_data3=NEW_REANALYSIS_SWE_PRIOR(:,:,iday);
     if iASO==2
@@ -127,19 +133,23 @@ for iASO=1:3
     imagesc(longitude(Ilon),latitude(Ilat),map_data3,'AlphaData',imAlpha)
     set(gca,'YDir','normal')
     h=colorbar;
+    if iASO==3
+        ylabel(h,'Difference (m)','FontSize',14)
+    end
     colormap(gca, RdBl)
     caxis([-1 1])
     if iASO==1
-        title([{'Prior - ASO SWE'} {''}])
+        yl=ylabel(['Prior - ASO SWE']);
+        yl.Position(1)=-119.9236;
     end
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     axis equal
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
     
     % 4) Plot Posterior SWE - ASO SWE map
-    iplot=iplot+1;
+    iplot=iASO+9;
     axes(ha(iplot))
     map_data3=NEW_REANALYSIS_SWE(:,:,iday);
     if iASO==2
@@ -159,17 +169,79 @@ for iASO=1:3
     imagesc(longitude(Ilon),latitude(Ilat),map_data3,'AlphaData',imAlpha)
     set(gca,'YDir','normal')
     h=colorbar;
-    ylabel(h,'SWE Difference (m)','FontSize',20)
+    if iASO==3
+        ylabel(h,'Difference (m)','FontSize',14)
+    end
     colormap(gca, RdBl)
     caxis([-1 1])
     if iASO==1
-        title([{'Posterior - ASO SWE'} {''}])
+        yl=ylabel(['Posterior - ASO SWE']);
+        yl.Position(1)=-119.9236;
     end
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     axis equal
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
+    %iplot=iplot+1;
+end
+
+
+% plot barplots
+load('ASO_fveg_comparison_bin')
+% define bins
+nodes=0:15:75;
+nbins=length(nodes)-1;
+node_mid=(nodes(1:end-1)+nodes(2:end))/2;
+
+
+for iASO=1:3
+    bnm=char(ASOnames(iASO,5:6));
+    disp(bnm)
+    iplot=12+iASO;
+    axes(ha(iplot))
+    hold on
+    for ibin=1:nbins
+        bin_VC_l=nodes(ibin);
+        bin_VC_u=nodes(ibin+1);
+        iveg=find(VC_mean.(bnm)>bin_VC_l & VC_mean.(bnm)<=bin_VC_u & ~isnan(mask.(bnm)));
+        data=nan(length(iveg),size(diff_post.(bnm),3));
+        data2=nan(length(iveg),size(diff_post.(bnm),3));
+        data3=nan(length(iveg),size(diff_post.(bnm),3));
+        for iyear=1:size(diff_post.(bnm),3)
+            dummy=diff_post.(bnm)(:,:,iyear);
+            data(:,iyear)=dummy(iveg);
+            dummy2=diff_prior.(bnm)(:,:,iyear);
+            data2(:,iyear)=dummy2(iveg);
+            SWE_dummy=ASO_SWE.(bnm)(:,:,iyear);
+            data3(:,iyear)=SWE_dummy(iveg);
+        end
+        SWE_mean=nanmean(data3(:));
+        disp(num2str(SWE_mean))
+        bin_RMSD_mid(ibin)=sqrt(nanmean(data(:).^2))./SWE_mean;
+        bin_RMSD_mid_prior(ibin)=sqrt(nanmean(data2(:).^2))./SWE_mean;
+    end
+    b=bar(node_mid,[bin_RMSD_mid*100;bin_RMSD_mid_prior*100]');
+    b(1).FaceAlpha=0.3;
+    b(2).FaceAlpha=0.3;
+    xticks(7.5:15:75);
+    xticklabels({'0-15','15-30','30-45','45-60','60-75'})
+    xtickangle(20)
+    yticklabels('auto')
+    xlabel('Ave. forest fraction (%)')
+
+    if iASO ==1
+        legend('Posteior','Prior','Location','northwest')
+        yl=ylabel('Rel. RMSD of SWE (%)');
+        yl.Position(1)=-18;
+    end
+    xlim([0,80])
+    ylim([0,max(bin_RMSD_mid_prior(:))*110])
+    box on
+    ax=ha(iplot);
+    ax.Position(3)=0.21;
+    set(gca,'Fontsize',14)
+    ax.XAxis.FontSize=12;
 end
 %% A few setting before printing
 set(gcf, 'Color', [1 1 1]);

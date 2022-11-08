@@ -128,7 +128,7 @@ for i_tile= 1:size(COORDS,1)
     tile_string = ['N' num2str(coords(1,1)) '_0' hemi num2str(coords(1,2)) '_0'];
     disp(['Extracting variables for tile ' tile_string ' in WY ' append_year])
     % Need to change the filepath if needed
-    filename = [output_dir tile_string '_agg_16/WY' num2str(WY) '/SWE_SCA_POST/' tile_string '_agg_16_SWE_SCA_POST_WY' append_year '.nc'];
+    filename = [output_dir tile_string '_agg_16_SWE_SCA_POST_WY' append_year '.nc'];
     
     % Read lat/lon
     lat=ncread(filename,'Latitude',[1],[Inf]);
@@ -180,7 +180,7 @@ for i_tile= 1:size(COORDS_WUS,1)
     coords=COORDS_WUS(i_tile,:);
     tile_string = ['N' num2str(coords(1,1)) '_0' hemi num2str(coords(1,2)) '_0'];
     disp(['Extrating variables for tile ' tile_string ' in WY ' append_year])
-    filename = [output_dir tile_string '_agg_16/WY' num2str(WY) '/SWE_SCA_POST/' tile_string '_agg_16_SWE_SCA_POST_WY' append_year '.nc'];
+    filename = [output_dir tile_string '_agg_16_SWE_SCA_POST_WY' append_year '.nc'];
     
     % Read lat/lon
     lat=ncread(filename,'Latitude',[1],[Inf]);

@@ -76,7 +76,7 @@ for j=1:5
     text(0.2, 5.,['{\it MD} = ' num2str(MD, '%.2f') ' m'],'FontSize',24)
     text(0.2, 4.5,['{\it RMSD} = ' num2str(RMSD, '%.2f') ' m'],'FontSize',24)
     grid off
-    xlabel('SNOTEL Snow Depth (m)')
+    xlabel('In situ Snow Depth (m)')
     ylabel('Reanalysis Snow Depth (m)')
     set(gca,'FontSize',20)
     title(basinname_str(ibasin,:),'FontSize',28)
@@ -126,7 +126,7 @@ grid off
 axis equal
 xlim([0,6])
 ylim([0,6])
-xlabel('SNOTEL Snow Depth (m)')
+xlabel('In situ Snow Depth (m)')
 ylabel('Reanalysis Snow Depth (m)')
 set(gca,'FontSize',20)
 whitebg(([245/255,245/255,245/255]))

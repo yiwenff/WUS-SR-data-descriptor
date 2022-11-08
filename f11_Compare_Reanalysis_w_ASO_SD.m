@@ -35,9 +35,9 @@ ylims=[37.7,38.2; 47.5,48.0; 38.967,39.184];
 ticks_x=[-119.7 -119.5 -119.3;-123.6 -123.4 -123.2;-107 -106.9 -106.8];
 ticks_y=[37.8 38 38.2; 47.6 47.8 48; 39 39.1 39.2];
 
-figure;clf;set(gcf,'Position', [10 100 1500 1200])
+figure;clf;set(gcf,'Position', [10 200 800 700])
 whitebg(([245/255,245/255,245/255]))
-ha=tight_subplot(3,4,0.05,0.05,0.05);
+ha=tight_subplot(4,3,[0.04,0.06],[0.05 0.03],[0.08 0.04]);
 % Pekka Kumpulainen (2020). tight_subplot(Nh, Nw, gap, marg_h, marg_w) 
 % (https://www.mathworks.com/matlabcentral/fileexchange/27991-tight_subplot-nh-nw-gap-marg_h-marg_w), 
 % MATLAB Central File Exchange. Retrieved November 11, 2020.
@@ -60,7 +60,7 @@ for iASO=1:3
         map_data1=map_data1.*Mask_seasonal;
     end
     map_data1=map_data1(Ilat,Ilon);
-    iplot=iplot+1;
+    iplot=iASO;
     axes(ha(iplot))
     imAlpha=ones(size(map_data1));
     imAlpha(isnan(map_data1))=0;
@@ -68,9 +68,9 @@ for iASO=1:3
     set(gca,'YDir','normal')
     h=colorbar;
     caxis([0 round(10*prctile(map_data1(:),99))/10])
-    title(['ASO Snow Depth' ])
     if iASO==1
-        title([{'ASO Snow Depth'} {'USCATB'}])
+        title(['USCATB'])
+        yl1=ylabel('ASO Snow Depth');
     elseif iASO==2
         title(['USWAOL'])
     else
@@ -78,14 +78,17 @@ for iASO=1:3
     end
     colormap(gca,map)
     axis equal
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     xticks(ticks_x(iASO,:))
     yticks(ticks_y(iASO,:))
+    if iASO==3
+        ylabel(h,'Snow Depth (m)','FontSize',14)
+    end
     
     % 2) Plot Reanalysis SWE
-    iplot=iplot+1;
+    iplot=iASO+3;
     axes(ha(iplot))    
     map_data3(nan_mask)=NaN;
     map_data3=map_data3(Ilat,Ilon);
@@ -97,17 +100,20 @@ for iASO=1:3
     h=colorbar;
     caxis([0 round(10*prctile(map_data1(:),99))/10])
     if iASO==1
-        title([{'Posterior'} {'Snow Depth'}])
+        yl=ylabel(['Posterior Snow Depth']);
+        yl.Position(1)=-119.9236;
     end
     axis equal
-    set(gca,'Fontsize',24)
+    set(gca,'Fontsize',14)
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
-    ylabel(h,'Snow Depth (m)','FontSize',20)
-
+    if iASO==3
+        ylabel(h,'Snow Depth (m)','FontSize',14)
+    end 
+    
     % 3) Plot Prior SD - ASO SD map
-    iplot=iplot+1;
+    iplot=iASO+6;
     axes(ha(iplot))
     map_data3=NEW_REANALYSIS_SD_PRIOR(:,:,iday);
     if iASO==2
@@ -130,16 +136,20 @@ for iASO=1:3
     colormap(gca, RdBl)
     caxis([-2 2])
     if iASO==1
-        title([{'Prior - ASO'} {'Snow Depth'}])
+        yl=ylabel([{'Prior - ASO'} {'Snow Depth'}]);
+        yl.Position(1)=-119.85;
     end
-    set(gca,'Fontsize',24)
+    if iASO==3
+        ylabel(h,'Difference (m)','FontSize',14)
+    end
+    set(gca,'Fontsize',14)
     axis equal
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
     
     % 4) Plot Posterior SD - ASO SD map
-    iplot=iplot+1;
+    iplot=iASO+9;
     axes(ha(iplot))
     map_data3=NEW_REANALYSIS_SD(:,:,iday);
     if iASO==2
@@ -159,23 +169,25 @@ for iASO=1:3
     imagesc(longitude(Ilon),latitude(Ilat),map_data3,'AlphaData',imAlpha)
     set(gca,'YDir','normal')
     h=colorbar;
-    ylabel(h,[{'Snow Depth'} {'Difference (m)'}],'FontSize',20)
     colormap(gca, RdBl)
     caxis([-2 2])
     if iASO==1
-        title([{'Posterior - ASO'} {'Snow Depth'}])
+        yl=ylabel([{'Posterior - ASO'} {'Snow Depth'}]);
+        yl.Position(1)=-119.85;
     end
-    set(gca,'Fontsize',24)
+    if iASO==3
+        ylabel(h,'Difference (m)','FontSize',14)
+    end
+    set(gca,'Fontsize',14)
     axis equal
     xlim(xlims(iASO,:))
     ylim(ylims(iASO,:))
     set(gca, 'XTickLabel', [], 'YTickLabel', [])
 end
 %% A few setting before printing
-set(gcf, 'InvertHardCopy', 'off');
 set(gcf, 'Color', [1 1 1]);
 set(gcf, 'Renderer', 'painters')
 set(gcf,'Units','Inches');
 pos = get(gcf,'Position');
 set(gcf,'PaperPositionMode','Auto','PaperSize',[pos(3), pos(4)])
-%print('-painters','f11_compare_ASO_snowdepth_maps','-dpdf','-r0')
+%print('-painters','f11_compare_ASO_SD_maps','-dpdf','-r0')
